@@ -17,18 +17,24 @@ def main(inp: Path, out: Path, logfile: Path) -> None:
         logger = csv.writer(fp, **CSV_ARGS)
 
         nvl_add = nvl_del = 0
+        deleted = False
 
         for idx, line in enumerate(reader):
-            is_vl = line[0].upper() == 'VL'
+            head = line[0].upper()
+            is_vl = head == 'VL'
 
-            if not is_vl or int(line[8]) > 0:
-                if is_vl:
-                    nvl_add += 1
-                writer.writerow(line)
+            if deleted:
+                if head in ('VH', 'VL'):
+                    deleted = False
+            if is_vl and int(line[8]) == 0:
+                deleted = True
+
+            if deleted:
+                logger.writerow([idx] + line)
+                nvl_del += is_vl
             else:
-                if is_vl:
-                    nvl_del += 1
-                logger.writerow([idx+1] + line)
+                writer.writerow(line)
+                nvl_add += is_vl
 
         print(f'VL Added: {nvl_add}, VL Removed {nvl_del}')
 
