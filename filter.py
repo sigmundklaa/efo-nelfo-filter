@@ -4,7 +4,8 @@ from pathlib import Path
 
 
 ENCODING = 'ISO-8859-1'
-CSV_ARGS = {'delimiter': ';', 'quoting': csv.QUOTE_NONE, 'quotechar': None}
+CSV_ARGS = {'delimiter': ';', 'quoting': csv.QUOTE_NONE,
+            'quotechar': None, 'lineterminator': '\n'}
 
 
 def main(inp: Path, out: Path, logfile: Path) -> None:
